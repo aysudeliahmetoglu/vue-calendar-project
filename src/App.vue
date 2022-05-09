@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <button @click="component = 'LoginVue'">Login</button>
-    <button @click="component = 'EventCalendar'">Calendar</button>
+    <button @click="component = 'EventCalendar'" v-if="isHidden">Calendar</button>
     <KeepAlive>
       <Component :is="component" />
     </KeepAlive>
@@ -11,21 +11,24 @@
 <script>
 
 
-import EventCalendar from './components/EventCalendar.vue';
+// import EventCalendar from './components/EventCalendar.vue';
 import LoginVue from './components/login_comp.vue';
 
 export default {
   name: 'App',
   data() {
     return {
-      component: 'LoginVue'
+      component: 'LoginVue',
+      isHidden: true,
+    
+      
     }
 
 
   },
 
   components: {
-    EventCalendar,
+    EventCalendar:()=>import('./components/EventCalendar.vue'),
     LoginVue,
   }
 

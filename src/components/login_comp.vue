@@ -1,24 +1,24 @@
 <template>
   <div>
-    <label>
+    <h3 v-if="isHidden">{{ username }} hoşgeldin kullanıcı</h3>
+    <label v-if="!isHidden">
       Email:
-      <input :type="text" v-model="email" name="email" />
+      <input :type="text" v-model="email" name="email" v-if="!isHidden" />
     </label>
-    <label>
+    <label v-if="!isHidden">
       Password:
-      <input :type="text" v-model="password" name="password" />
+      <input :type="text" v-model="password" name="password" v-if="!isHidden" />
     </label>
 
     <div class="buttons">
-      <button v-on:click="login()">Login</button>
-  <button v-on:click="listEvents()">ListEvents</button>
+      <button v-on:click="login()" v-if="!isHidden">Login</button>
+      <button v-on:click="logout()" v-if="isHidden">Logout</button>
+      <!-- <button v-on:click="listEvents()">ListEvents</button> -->
 
-  <!-- <button @click="logout">Logout</button> -->
-  <!-- <button @click="register">Register</button> -->
+      <!-- <button @click="logout">Logout</button> -->
+      <!-- <button @click="register">Register</button> -->
+    </div>
   </div>
-    
-  </div>
-
 </template>
 <script>
 
@@ -30,6 +30,8 @@ export default {
     return {
       email: "",
       password: "",
+      isHidden: false,
+      username: "",
 
     };
 
@@ -47,7 +49,9 @@ export default {
         })
         .then((response => {
           localStorage.setItem('auth-token', JSON.stringify(response.data))
-          console.log(response.data);
+          console.log(response.data, JSON.parse(localStorage.getItem('auth-token')));
+          this.username = JSON.parse(localStorage.getItem('auth-token')).username;
+          this.isHidden = true;
 
         }))
         .catch((error) => {
@@ -81,6 +85,15 @@ export default {
       //   .catch(function (error) {
       //     console.log(error);
       //   });
+
+
+    },
+    logout() {
+      if (JSON.parse(localStorage.getItem('auth-token')).token) {
+        localStorage.removeItem('auth-token');
+        this.isHidden = false;
+        alert("çıkış")
+      }
 
 
     },
